@@ -1,0 +1,58 @@
+cluster:
+  # URL de la ruta donde se expone la URL de management
+  replicas: 1
+  # sobreescribe el template de rabbit
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            containers:
+              - name: rabbitmq
+                volumeMounts:
+                  - mountPath: /opt/rabbitmq/community-plugins
+                    name: community-plugins
+                env:
+                  - name: TZ
+                    value: America/Buenos_Aires
+            volumes:
+              - name: community-plugins
+                emptyDir: {}
+            initContainers:
+              - command:
+                  - sh
+                  - -c
+                  - curl -L -v https://github.com/rabbitmq/rabbitmq-delayed-message-exchange/releases/download/3.9.0/rabbitmq_delayed_message_exchange-3.9.0.ez --output /community-plugins/rabbitmq_delayed_message_exchange-3.9.0.ez
+                image: curlimages/curl
+                imagePullPolicy: IfNotPresent
+                name: copy-community-plugins
+                env:
+                  - name: TZ
+                    value: America/Buenos_Aires
+                resources:
+                  limits:
+                    cpu: 100m
+                    memory: 500Mi
+                  requests:
+                    cpu: 100m
+                    memory: 500Mi
+                terminationMessagePolicy: FallbackToLogsOnError
+                volumeMounts:
+                  - mountPath: /community-plugins/
+                    name: community-plugins
+  #recursos de rabbit
+  resources:
+    limits:
+      cpu: 800m
+      memory: 1Gi
+    requests:
+      cpu: 500m
+      memory: 1Gi
+  service:
+    type: LoadBalancer
+  rabbitmq:
+    additionalPlugins:
+      - rabbitmq_delayed_message_exchange
+    envConfig: |
+      PLUGINS_DIR=/opt/rabbitmq/plugins:/opt/rabbitmq/community-plugins
+vhosts: []

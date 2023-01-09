@@ -1,0 +1,65 @@
+{{/*
+CREA LOS VHOST, USUARIOS y PERMISOS
+TODO: NO FUNCIONA POR UN PROBLEMA DE ORDENAMIENTO EN HELM, HAY QUE CREAR LOS USUARIOS Y PERMISOS A PARTE
+*/}}
+
+{{- range $user :=  .Values.vhosts}}
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Vhost
+metadata:
+  name: {{ $user.name }}
+  labels:
+    {{- include "rabbit-chart.labels" $ | nindent 4 }}
+spec:
+  name: {{ $user.name }} # vhost name
+  rabbitmqClusterReference:
+    name: {{ $.Release.Name }}
+---
+{{- $secretName :=   printf "%s-credentials" $user.name -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $secretName }}
+  annotations:
+    "helm.sh/resource-policy": keep
+  labels:
+      {{- include "rabbit-chart.labels" $ | nindent 4 }}
+type: Opaque
+stringData:
+  username: {{ $user.name }}
+  password: {{ $user.password }}
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: {{ $user.name }}
+  labels:
+    {{- include "rabbit-chart.labels" $ | nindent 4 }}
+spec:
+  tags:
+    # available tags are 'management', 'policymaker', 'monitoring' and 'administrator'
+    - administrator
+    - management
+    - policymaker
+  rabbitmqClusterReference:
+    name: {{ $.Release.Name }}
+  importCredentialsSecret:
+    name: {{ $user.name }}-credentials
+---
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: {{ $user.name }}-permission
+  labels:
+    {{- include "rabbit-chart.labels" $ | nindent 4 }}
+spec:
+  vhost: {{ $user.name }}
+  user: {{ $user.name }}
+  permissions:
+    write: '.*'
+    configure: '.*'
+    read: '.*'
+  rabbitmqClusterReference:
+    name: {{ $.Release.Name }}
+{{ end }}

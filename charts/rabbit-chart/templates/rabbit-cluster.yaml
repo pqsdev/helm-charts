@@ -1,0 +1,37 @@
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    {{- include "rabbit-chart.labels" . | nindent 4 }}
+spec:
+  override:
+    {{- toYaml .Values.cluster.override | nindent 4 }}
+  replicas:
+    {{ .Values.cluster.replicas }}
+  resources:
+    {{- toYaml .Values.cluster.resources | nindent 4 }}
+  rabbitmq:
+    {{- toYaml .Values.cluster.rabbitmq | nindent 4 }}
+  {{- if .Values.cluster.service }}
+  service:
+    {{- toYaml .Values.cluster.service | nindent 4 }}
+  {{ end }}
+{{- if .Values.cluster.managementRoute }}
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ .Release.Name }}-management
+  labels:
+    {{- include "rabbit-chart.labels" . | nindent 4 }}
+spec:
+  host: {{ .Values.cluster.managementRoute }}-management-fci-lab.apps.closdesa.bvsa.local
+  to:
+    kind: Service
+    name: {{ .Release.Name }}
+    weight: 100
+  port:
+    targetPort: management
+  wildcardPolicy: None
+{{ end }}
