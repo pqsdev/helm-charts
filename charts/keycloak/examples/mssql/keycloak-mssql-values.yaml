@@ -1,0 +1,40 @@
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: user
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: password
+
+database:
+  vendor: mssql
+  url: jdbc:sqlserver://mssql:1433;databaseName=keycloak;encrypt=true;trustServerCertificate=true;
+  username: sa
+  existingSecret: sqlserver-secret
+  database: keycloak
+
+# creates a database if not exists before creating the pods (NOT MANDATORY)
+extraInitContainers: |
+  - name: init-db
+    image: mcr.microsoft.com/mssql-tools
+    command:
+      - "sh"
+      - "-c"
+      - "/opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P $SA_PASSWORD -Q \"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'keycloak') CREATE DATABASE keycloak\""
+    env:
+      - name: SA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: sqlserver-secret
+            key: password
+
+
+secrets:
+  admin-creds:
+    stringData:
+      user: admin
+      password: secret

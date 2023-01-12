@@ -4,7 +4,7 @@ metadata:
   name: sqlserver-secret
 type: Opaque
 stringData:
-  SA_PASSWORD: P4ssw0rd!!
+  password: P4ssw0rd!!
 ---
 # sqlserver deployment and service: sqlserver-deploy.yaml
 apiVersion: apps/v1
@@ -23,24 +23,24 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: ms-sqlserver
-        resources: {}
-        image: mcr.microsoft.com/mssql/server:2017-latest
-        ports:
-        - containerPort: 1433
-        env:
-        - name: ACCEPT_EULA
-          value: "Y"
-        - name: SA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: sqlserver-secret
-              key: SA_PASSWORD
+        - name: ms-sqlserver
+          resources: {}
+          image: mcr.microsoft.com/mssql/server:2017-latest
+          ports:
+            - containerPort: 1433
+          env:
+            - name: ACCEPT_EULA
+              value: 'Y'
+            - name: SA_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: sqlserver-secret
+                  key: password
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: sqlserver-deployment
+  name: mssql
 spec:
   selector:
     app: ms-sqlserver
@@ -49,3 +49,23 @@ spec:
       port: 1433
       targetPort: 1433
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mssql-tools
+spec:
+  containers:
+    - name: cmsqql-init
+      image: mcr.microsoft.com/mssql-tools
+      command:
+      - "sh"
+      - "-c"
+      - "/opt/mssql-tools/bin/sqlcmd -S mssql -U sa -P $SA_PASSWORD -Q \"IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = 'keycloak') CREATE DATABASE keycloak\""
+      env:
+      - name: SA_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: sqlserver-secret
+            key: password
+      resources: {}

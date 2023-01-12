@@ -398,9 +398,7 @@ database:
   existingSecretKey: ""
   # E.g. dev-file, dev-mem, mariadb, mssql, mysql, oracle or postgres
   vendor:
-  hostname:
-  port:
-  database:
+  url:
   username:
   password:
 

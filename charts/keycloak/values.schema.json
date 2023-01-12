@@ -260,11 +260,8 @@
           "vendor": {
             "type": "string"
           },
-          "hostname": {
+          "url": {
             "type": "string"
-          },
-          "port": {
-            "type": "integer"
           },
           "username": {
             "type": "string"
