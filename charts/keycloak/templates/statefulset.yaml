@@ -148,7 +148,9 @@ spec:
             - name: KC_HEALTH_ENABLED
               value: "true"
             {{- end }}
-
+            {{- with .Values.extraEnv }}
+            {{- tpl . $ | nindent 12 }}
+            {{- end }}
           envFrom:
             {{- with .Values.extraEnvFrom }}
             {{- tpl . $ | nindent 12 }}
