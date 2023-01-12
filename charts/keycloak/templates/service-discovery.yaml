@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "keycloak.fullname" . }}-discovery
+  namespace: {{ .Release.Namespace }}
+  {{- with .Values.serviceDiscovery.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{- printf "%s: %s" $key (tpl $value $ | quote) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  labels:
+    {{- include "keycloak.labels" . | nindent 4 }}
+    app.kubernetes.io/component: discovery-service
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: jgroups
+      port: {{ .Values.service.discoveryPort }}
+      targetPort: 7800
+      protocol: TCP
+  selector:
+    {{- include "keycloak.selectorLabels" . | nindent 4 }}
