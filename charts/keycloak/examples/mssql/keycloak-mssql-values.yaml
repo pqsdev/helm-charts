@@ -9,6 +9,8 @@ extraEnv: |
       secretKeyRef:
         name: {{ include "keycloak.fullname" . }}-admin-creds
         key: password
+  - name: KC_HOSTNAME_ADMIN
+    value: 'admin.{{ .Release.Name }}.localdev.me'
 
 database:
   vendor: mssql
@@ -56,13 +58,29 @@ ingress:
       host: '{{ .Release.Name }}.localdev.me'
       # Paths for the host
       paths:
-        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/realms'
           pathType: Prefix
-  # TLS configuration
-  tls:
-    - hosts:
-        - '{{ .Release.Name }}.localdev.me'
-      secretName: ""
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/resources'
+          pathType: Prefix
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/robots.txt'
+          pathType: Exact
+  console:
+    enabled: true
+    # The name of Ingress Class associated with the console ingress only
+    ingressClassName: "nginx"
+
+    annotations:
+      nginx.ingress.kubernetes.io/backend-protocol: 'HTTP'
+      cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+    rules:
+      -
+        # Ingress host
+        host: 'admin.{{ .Release.Name }}.localdev.me'
+        # Paths for the host
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}'
+            pathType: Prefix
+
 
 secrets:
   admin-creds:
