@@ -2,9 +2,12 @@
 
 [Keycloak](http://www.keycloak.org/) is an open source identity and access management for modern applications and services.
 
-This implementation is based on Codecentric's Keycloak chart <https://github.com/codecentric/helm-charts>
+
+This implementation is based on [Codecentric's Keycloak chart](https://github.com/codecentric/helm-charts).
 
 Note that this chartis the implementation of the Quarqus version of Keycloak
+
+![diagram](diagram.drawio.svg)
 
 ## TL;DR;
 
@@ -17,17 +20,27 @@ command:
   - "--http-port=8080"
   - "--hostname-strict=false"
   - "--hostname-strict-https=false"
+
 extraEnv: |
   - name: KEYCLOAK_ADMIN
-    value: admin
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: user
   - name: KEYCLOAK_ADMIN_PASSWORD
-    value: admin
-  - name: JAVA_OPTS_APPEND
-    value: >-
-      -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: password
+
+secrets:
+  admin-creds:
+    stringData:
+      user: admin
+      password: secret
 EOF
 
-$ helm install keycloak codecentric/keycloakx --values ./values.yaml
+$ helm install keycloak pqs/keycloak --values ./values.yaml
 ```
 
 Note that the default configuration is not suitable for production since it uses a h2 file database by default.
@@ -219,14 +232,14 @@ The following table lists the configurable parameters of the Keycloak chart and 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
 ```console
-$ helm install keycloak codecentric/keycloakx -n keycloak --set replicas=1
+$ helm install keycloak pqs/keycloak -n keycloak --set replicas=1
 ```
 
 Alternatively, a YAML file that specifies the values for the parameters can be provided while
 installing the chart. For example:
 
 ```console
-$ helm install keycloak codecentric/keycloakx -n keycloak --values values.yaml
+$ helm install keycloak pqs/keycloak -n keycloak --values values.yaml
 ```
 
 The chart offers great flexibility.
@@ -344,7 +357,7 @@ extraEnv: |
 ### High Availability and Clustering
 
 For high availability, Keycloak must be run with multiple replicas (`replicas > 1`).
-The chart has a helper template (`keycloak.serviceDnsName`) that creates the DNS name based on the headless service.
+The chart has a helper template (`keycloak.serviceDnsName`) that creates the DNS name based on the discovery service.
 
 #### DNS_PING Service Discovery
 
@@ -354,7 +367,7 @@ JGroups discovery via DNS_PING is enabled by default but needs an additional JVM
 extraEnv: |
   - name: JAVA_OPTS_APPEND
     value: >-
-      -Djgroups.dns.query={{ include "keycloak.fullname" . }}-headless
+      -Djgroups.dns.query={{ include "keycloak.fullname" . }}-discovery
 ```
 
 #### Custom Service Discovery

@@ -16,7 +16,7 @@ Note that we use some customizations in the `keycloak-server-values.yaml` file:
 ## Add repository
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm repo add codecentric https://codecentric.github.io/helm-charts
+helm repo add pqs https://pqsdev.github.io/helm-charts
 ```
 
 ## Update helm repos
@@ -42,7 +42,7 @@ helm install keycloak-db bitnami/postgresql --values ./keycloak-db-values.yaml
 # Deploy Keycloak
 
 ```
-helm install keycloak codecentric/keycloakx --values ./keycloak-server-values.yaml
+helm install keycloak pqs/keycloak --values ./keycloak-server-values.yaml
 ```
 
 If everything worked you should now see log entries like this:

@@ -11,7 +11,7 @@ This example shows how to configure Keycloak to use a Microsoft SQL database.
 ## Create Namespace and Deploy MSSQL Server instance
 ```
 kubectl create ns keycloak-mssql
-kubectl appply -f .\charts\keycloak\examples\mssql\mssql.yaml -n keycloak-mssql
+kubectl apply -f .\charts\keycloak\examples\mssql\mssql.yaml -n keycloak-mssql
 ```
 
 # Deploy Keycloak
