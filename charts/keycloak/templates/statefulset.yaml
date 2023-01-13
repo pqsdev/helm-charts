@@ -21,7 +21,7 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicas }}
   {{- end }}
-  serviceName: {{ include "keycloak.fullname" . }}-headless
+  serviceName: {{ include "keycloak.fullname" . }}-discovery
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   updateStrategy:
     type: {{ .Values.updateStrategy }}

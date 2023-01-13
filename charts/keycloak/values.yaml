@@ -100,6 +100,7 @@ lifecycleHooks: |
 terminationGracePeriodSeconds: 60
 
 # The internal Kubernetes cluster domain
+# The internal Kubernetes cluster domain
 clusterDomain: cluster.local
 
 ## Overrides the default entrypoint of the Keycloak container
@@ -147,7 +148,7 @@ livenessProbe: |
     - --fail
     - --silent
     - --insecure
-    - http://127.0.0.1:8080/auth/health/live
+    - http://127.0.0.1:8080{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/health/live
   failureThreshold: 150
   initialDelaySeconds: 20
   periodSeconds: 2
@@ -163,7 +164,7 @@ readinessProbe: |
     - --fail
     - --silent
     - --insecure
-    - http://127.0.0.1:8080/auth/health/ready
+    - http://127.0.0.1:8080{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/health/ready
   failureThreshold: 250
   initialDelaySeconds: 20
   periodSeconds: 2
@@ -227,7 +228,7 @@ secrets:
 service:
   # Annotations for HTTP service
   annotations: {}
-  # Additional labels for headless and HTTP Services
+  # Additional labels for services and HTTP Services
   labels: {}
   # key: value
   # The Service type
@@ -259,10 +260,6 @@ service:
   sessionAffinity: ""
   # Session affinity config
   sessionAffinityConfig: {}
-
-serviceHeadless:
-  # Annotations for headless service
-  annotations: {}
 
 serviceDiscovery:
   # Annotations for discovery service

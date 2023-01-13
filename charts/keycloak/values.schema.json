@@ -398,14 +398,6 @@
           }
         }
       },
-      "serviceHeadless": {
-        "type": "object",
-        "properties": {
-          "annotations": {
-            "type": "object"
-          }
-        }
-      },
       "serviceDiscovery": {
         "type": "object",
         "properties": {
