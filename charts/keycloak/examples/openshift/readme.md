@@ -1,23 +1,13 @@
-# Keycloak with MSSQL
+# Keycloak with Openshift
 
 This example shows how to configure Keycloak to use a Microsoft SQL database.
+## Requirements
+OpenShift Cluster or OpenShift Local
 
-# Prerequisits
-- NGINX INGRESS
-- CERTMANAGER
-
-# Setup
-
-## Create Namespace and Deploy MSSQL Server instance
-```
-kubectl create ns keycloak-mssql
-kubectl apply -f .\charts\keycloak\examples\mssql\mssql.yaml -n keycloak-mssql
-```
-
-# Deploy Keycloak
+## Deploy Keycloak
 Using chart source code
 ```
-helm upgrade --install keycloak .\charts\keycloak\  --values .\charts\keycloak\examples\mssql\keycloak-mssql-values.yaml -n keycloak-mssql
+helm upgrade --install keycloak .\charts\keycloak\  --values .\charts\keycloak\examples\openshift\keycloak-openshift-values.yaml -n keycloak-openshift --dry-run
 ```
 Using chart from PQS Helm Repo
 
@@ -40,5 +30,5 @@ username: `admin` and password: `secret`.
 # Remove Keycloak-mssql napespace
 
 ```
-kubectl delete ns keycloak-mssql
+kubectl delete ns keycloak-os
 ```
