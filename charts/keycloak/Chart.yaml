@@ -1,0 +1,23 @@
+apiVersion: v2
+name: keycloak
+version: 2.0.0
+appVersion: 20.0.3
+description: Keycloak (Quarqus distribution) - Open Source Identity and Access Management for Modern Applications and Services
+keywords:
+  - sso
+  - idm
+  - openid connect
+  - saml
+  - kerberos
+  - oauth
+  - ldap
+  - keycloak
+  - quarkus
+home: https://www.keycloak.org/
+icon: https://www.keycloak.org/resources/images/keycloak_logo_200px.svg
+sources:
+  - https://github.com/pqsdev/helm-charts
+  - https://github.com/keycloak/keycloak/tree/main/quarkus/container
+maintainers:
+  - name: pqsar
+  - name: pqsdev
