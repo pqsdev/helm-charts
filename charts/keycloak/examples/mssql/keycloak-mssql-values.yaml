@@ -1,3 +1,4 @@
+replicas: 2
 extraEnv: |
   - name: KEYCLOAK_ADMIN
     valueFrom:
@@ -58,6 +59,8 @@ ingress:
       host: '{{ .Release.Name }}.localdev.me'
       # Paths for the host
       paths:
+        #- path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}'
+        #  pathType: Prefix
         - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/realms'
           pathType: Prefix
         - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/resources'
@@ -80,8 +83,6 @@ ingress:
         paths:
           - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}'
             pathType: Prefix
-
-
 secrets:
   admin-creds:
     stringData:

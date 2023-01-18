@@ -17,7 +17,7 @@ kubectl apply -f .\charts\keycloak\examples\mssql\mssql.yaml -n keycloak-mssql
 # Deploy Keycloak
 Using chart source code
 ```
-helm install keycloak .\charts\keycloak\  --values .\charts\keycloak\examples\mssql\keycloak-mssql-values.yaml -n keycloak-mssql --dry-run
+helm upgrade --install keycloak .\charts\keycloak\  --values .\charts\keycloak\examples\mssql\keycloak-mssql-values.yaml -n keycloak-mssql
 ```
 Using chart from PQS Helm Repo
 
