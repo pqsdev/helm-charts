@@ -34,6 +34,30 @@
           }
         }
       }
+    },
+    "route":{
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "object"
+        },
+        "annotations": {
+          "type": "object"
+        },
+        "host": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "object"
+        },
+        "path": {
+          "type": "string"
+        },
+        "tls": {
+          "type": "object"
+        }
+      }
     }
   },
   "properties": {
@@ -301,27 +325,10 @@
       "restartPolicy": {
         "type": "string"
       },
-      "route": {
-        "type": "object",
-        "properties": {
-          "annotations": {
-            "type": "object"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "host": {
-            "type": "string"
-          },
-          "labels": {
-            "type": "object"
-          },
-          "path": {
-            "type": "string"
-          },
-          "tls": {
-            "type": "object"
-          }
+      "routes": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/route"
         }
       },
       "secrets": {

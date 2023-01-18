@@ -1,4 +1,4 @@
-# KeycloakX Helm Chart Examples
+# Keycloak Helm Chart Examples
 
 Various examples for using the helm chart for custom deployments.
 

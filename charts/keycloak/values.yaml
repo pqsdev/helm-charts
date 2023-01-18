@@ -343,25 +343,7 @@ networkPolicy:
   #         port: 3306
   egress: []
 
-route:
-  # If `true`, an OpenShift Route is created
-  enabled: false
-  # Path for the Route
-  path: /
-  # Route annotations
-  annotations: {}
-  # Additional Route labels
-  labels: {}
-  # Host name for the Route
-  host: ""
-  # TLS configuration
-  tls:
-    # If `true`, TLS is enabled for the Route
-    enabled: true
-    # Insecure edge termination policy of the Route. Can be `None`, `Redirect`, or `Allow`
-    insecureEdgeTerminationPolicy: Redirect
-    # TLS termination of the route. Can be `edge`, `passthrough`, or `reencrypt`
-    termination: edge
+routes: []
 
 dbchecker:
   enabled: false

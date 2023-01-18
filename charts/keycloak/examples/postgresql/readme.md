@@ -1,4 +1,4 @@
-# Keycloak.X with PostgreSQL
+# Keycloak with PostgreSQL
 
 This example shows how to configure Keycloak.X to use a PostgreSQL database.
 

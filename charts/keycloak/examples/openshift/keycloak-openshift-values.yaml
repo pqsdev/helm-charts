@@ -1,0 +1,56 @@
+replicas: 1
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: user
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: password
+  - name: KC_HOSTNAME_ADMIN
+    value: '{{ .Release.Name }}-admin-{{ .Release.Namespace }}.apps-crc.testing'
+
+routes:
+
+  - name: '{{ .Release.Name }}-internal'
+    host: '{{ .Release.Name }}-internal-{{ .Release.Namespace }}.apps-crc.testing'
+    path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+    labels: {}
+    annotations: {}
+    tls:
+      enabled: true
+      termination: edge
+      insecureEdgeTerminationPolicy: 'Redirect'
+
+  - name: '{{ .Release.Name }}-admin'
+    host: '{{ .Release.Name }}-admin-{{ .Release.Namespace }}.apps-crc.testing'
+    path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/'
+    labels: {}
+    annotations: {}
+    tls:
+      enabled: true
+      termination: edge
+      insecureEdgeTerminationPolicy: 'Redirect'
+
+secrets:
+  admin-creds:
+    stringData:
+      user: admin
+      password: secret
+  sqlserver-secret:
+    stringData:
+        password: secret
+
+serviceAccount:
+  create: false
+  name: deployer
+
+securityContext:
+  runAsUser: 1000680010
+  runAsNonRoot: true
+
+podSecurityContext:
+  fsGroup: null

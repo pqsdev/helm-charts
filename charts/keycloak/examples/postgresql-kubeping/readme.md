@@ -1,8 +1,8 @@
-# Keycloak.X with KUBE_PING
+# Keycloak with KUBE_PING
 
 This example shows how to use KUBE_PING JGroup cluster discovery with Keycloak.X.
 
-Since Keycloak.X (17.0.x, 18.0.x) does not support jgroups KUBE_PING out of the box,
+Since Keycloak (17.0.x, 18.0.x) does not support jgroups KUBE_PING out of the box,
 we need to download the library and copy it into a custom docker image.
 
 Note that we use some customizations in the `keycloak-server-values.yaml` file:
