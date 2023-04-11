@@ -1,0 +1,72 @@
+replicas: 1
+extraEnv: |
+  - name: KEYCLOAK_ADMIN
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: user
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ include "keycloak.fullname" . }}-admin-creds
+        key: password
+  - name: KC_HOSTNAME_ADMIN
+    value: 'admin.{{ .Release.Name }}.localdev.me'
+
+ingress:
+  # If `true`, an Ingress is created
+  enabled: true
+  # The Service port targeted by the Ingress
+  servicePort: http
+  # Ingress annotations
+  annotations:
+    route.openshift.io/termination: edge
+  # Additional Ingress labels
+  labels: {}
+   # List of rules for the Ingress
+  rules:
+    -
+      # Ingress host
+      host: '{{ .Release.Name }}.localdev.me'
+      # Paths for the host
+      paths:
+        #- path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}'
+        #  pathType: Prefix
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/realms'
+          pathType: Prefix
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/resources'
+          pathType: Prefix
+        - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}/robots.txt'
+          pathType: Exact
+  console:
+    enabled: true
+    annotations:
+      route.openshift.io/termination: edge
+    rules:
+      -
+        # Ingress host
+        host: 'admin.{{ .Release.Name }}.localdev.me'
+        # Paths for the host
+        paths:
+          - path: '{{ tpl .Values.http.relativePath $ | trimSuffix "/" }}'
+            pathType: Prefix
+
+secrets:
+  admin-creds:
+    stringData:
+      user: admin
+      password: secret
+  sqlserver-secret:
+    stringData:
+        password: secret
+
+serviceAccount:
+  create: false
+  name: deployer
+
+securityContext:
+  runAsUser: 1000690001
+  runAsNonRoot: true
+
+podSecurityContext:
+  fsGroup: null

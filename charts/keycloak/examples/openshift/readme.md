@@ -9,12 +9,13 @@ Using chart source code
 ```
 helm upgrade --install keycloak .\charts\keycloak\  --values .\charts\keycloak\examples\openshift\keycloak-openshift-values.yaml -n keycloak-openshift --dry-run
 ```
+
 Using chart from PQS Helm Repo
 
 ```
 helm repo add pqs https://pqsdev.github.io/helm-charts
 helm repo pqs update
-helm install keycloak pqs\keycloak\  --values .\charts\keycloak\examples\mssql\keycloak-mssql-values.yaml -n keycloak-mssql
+helm upgrade --install keycloak pqs/keycloak --values .\charts\keycloak\examples\openshift\keycloak-openshift-values.yaml -n keycloak-openshift --dry-run
 ```
 
 # Access Keycloak
