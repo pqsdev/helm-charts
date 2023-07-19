@@ -1,8 +1,8 @@
 # Optionally override the fully qualified name
-fullnameOverride: ""
+fullnameOverride: ''
 
 # Optionally override the name
-nameOverride: ""
+nameOverride: ''
 
 # The number of replicas to create (has no effect if autoscaling enabled)
 replicas: 1
@@ -12,7 +12,7 @@ image:
   repository: quay.io/keycloak/keycloak
   # Overrides the Keycloak image tag  whose default is the chart appVersion
   # digest is accepted en in format @sha256:d39d5dc009d2...
-  tag: "20.0.3"
+  tag: '20.0.3'
 
   # The Keycloak image pull policy
   pullPolicy: IfNotPresent
@@ -46,7 +46,7 @@ serviceAccount:
   allowReadPods: false
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: ''
   # Additional annotations for the ServiceAccount
   annotations: {}
   # Additional labels for the ServiceAccount
@@ -78,7 +78,7 @@ securityContext:
   runAsNonRoot: true
 
 # Additional init containers, e. g. for providing custom themes
-extraInitContainers: ""
+extraInitContainers: ''
 
 # When using service meshes which rely on a sidecar, it may be necessary to skip init containers altogether,
 # since the sidecar doesn't start until the init containers are done, and the sidecar may be required
@@ -87,7 +87,7 @@ extraInitContainers: ""
 skipInitContainers: false
 
 # Additional sidecar containers, e. g. for a database proxy, such as Google's cloudsql-proxy
-extraContainers: ""
+extraContainers: ''
 
 # Lifecycle hooks for the Keycloak container
 lifecycleHooks: |
@@ -110,21 +110,22 @@ command: []
 
 ## Overrides the default args for the Keycloak container
 args:
-  - "start"
+  - 'start'
 
 # Additional environment variables for Keycloak
-extraEnv: ""
+extraEnv:
+  ''
   # - name: KC_LOG_LEVEL
   #   value: DEBUG
 
 # Additional environment variables for Keycloak mapped from Secret or ConfigMap
-extraEnvFrom: "[]"
+extraEnvFrom: '[]'
 
 #  Pod priority class name
-priorityClassName: ""
+priorityClassName: ''
 
 # Pod affinity
-affinity: ""
+affinity: ''
 
 # Topology spread constraints template
 topologySpreadConstraints:
@@ -190,7 +191,8 @@ startupProbe: |
   timeoutSeconds: 1
 
 # Pod resource requests and limits
-resources: {}
+resources:
+  {}
   # requests:
   #   cpu: "500m"
   #   memory: "1024Mi"
@@ -199,10 +201,10 @@ resources: {}
   #   memory: "1024Mi"
 
 # Add additional volumes, e. g. for custom themes
-extraVolumes: "[]"
+extraVolumes: '[]'
 
 # Add additional volumes mounts, e. g. for custom themes
-extraVolumeMounts: "[]"
+extraVolumeMounts: '[]'
 
 # Add additional ports, e. g. for admin console or exposing JGroups ports
 extraPorts: []
@@ -236,7 +238,7 @@ service:
   # The Service type
   type: ClusterIP
   # Optional IP for the load balancer. Used for services of type LoadBalancer only
-  loadBalancerIP: ""
+  loadBalancerIP: ''
   # Discovery port used by jsgroups when keycloack is in a cluster
   discoveryPort: 7800
   # The http Service port
@@ -256,10 +258,10 @@ service:
   # When using Service type LoadBalancer, you can preserve the source IP seen in the container
   # by changing the default (Cluster) to be Local.
   # See https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
-  externalTrafficPolicy: "Cluster"
+  externalTrafficPolicy: 'Cluster'
   # Session affinity
   # See https://kubernetes.io/docs/concepts/services-networking/service/#proxy-mode-userspace
-  sessionAffinity: ""
+  sessionAffinity: ''
   # Session affinity config
   sessionAffinityConfig: {}
 
@@ -271,21 +273,22 @@ ingress:
   # If `true`, an Ingress is created
   enabled: false
   # The name of the Ingress Class associated with this ingress
-  ingressClassName: ""
+  ingressClassName: ''
   # The Service port targeted by the Ingress
   servicePort: http
   # Ingress annotations
-  annotations: {}
+  annotations:
+    {}
     ## Resolve HTTP 502 error using ingress-nginx:
     ## See https://www.ibm.com/support/pages/502-error-ingress-keycloak-response
     # nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
 
   # Additional Ingress labels
-  labels: {}
-   # List of rules for the Ingress
+  labels:
+    {}
+    # List of rules for the Ingress
   rules:
-    -
-      # Ingress host
+    - # Ingress host
       host: '{{ .Release.Name }}.keycloak.example.com'
       # Paths for the host
       paths:
@@ -293,22 +296,21 @@ ingress:
           pathType: Prefix
   # TLS configuration
   tls:
-    - hosts:
-        - keycloak.localdev.me
-      secretName: ""
+    hosts:
+      - 'keycloak.localdev.me'
+    secretName: 'keycloak.localdev.me-cert'
 
   # ingress for console only (/auth/admin)
   console:
     # If `true`, an Ingress is created for console path only
     enabled: false
     # The name of Ingress Class associated with the console ingress only
-    ingressClassName: ""
+    ingressClassName: ''
     # Ingress annotations for console ingress only
     # Useful to set nginx.ingress.kubernetes.io/whitelist-source-range particularly
     annotations: {}
     rules:
-      -
-        # Ingress host
+      - # Ingress host
         host: '{{ .Release.Name }}.keycloak.example.com'
         # Paths for the host
         paths:
@@ -316,7 +318,7 @@ ingress:
             pathType: Prefix
 
     # Console TLS configuration
-    tls: []
+    tls: {}
 #      - hosts:
 #          - console.keycloak.example.com
 #        secretName: ""
@@ -365,24 +367,23 @@ dbchecker:
   # Resource requests and limits for the dbchecker container
   resources:
     requests:
-      cpu: "20m"
-      memory: "32Mi"
+      cpu: '20m'
+      memory: '32Mi'
     limits:
-      cpu: "20m"
-      memory: "32Mi"
+      cpu: '20m'
+      memory: '32Mi'
 
 database:
   # don't create secret for db password. Instead use existing k8s secret
   # existingSecret: "my-existent-dbpass-secret"
   # existingSecretKey: "password"
-  existingSecret: ""
-  existingSecretKey: ""
+  existingSecret: ''
+  existingSecretKey: ''
   # E.g. dev-file, dev-mem, mariadb, mssql, mysql, oracle or postgres
   vendor:
   url:
   username:
   password:
-
 
 proxy:
   enabled: true
@@ -396,7 +397,7 @@ health:
 
 http:
   # For backwards compatibility reasons we set this to the value used by previous Keycloak versions.
-  relativePath: "/auth"
+  relativePath: '/auth'
   #Enables the HTTP listener.
   httpEnabled: true
 
@@ -404,7 +405,7 @@ serviceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: ''
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector: {}
   # Annotations for the ServiceMonitor
@@ -424,7 +425,7 @@ extraServiceMonitor:
   # If `true`, a ServiceMonitor resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: ''
   # Optionally sets a namespace for the ServiceMonitor
   namespaceSelector: {}
   # Annotations for the ServiceMonitor
@@ -444,7 +445,7 @@ prometheusRule:
   # If `true`, a PrometheusRule resource for the prometheus-operator is created
   enabled: false
   # Optionally sets a target namespace in which to deploy the ServiceMonitor resource
-  namespace: ""
+  namespace: ''
   # Annotations for the PrometheusRule
   annotations: {}
   # Additional labels for the PrometheusRule
