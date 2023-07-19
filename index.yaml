@@ -14,6 +14,34 @@ entries:
   keycloak:
   - apiVersion: v2
     appVersion: 22.0.0
+    created: "2023-07-19T16:22:34.883923773Z"
+    description: Keycloak (Quarqus distribution) - Open Source Identity and Access
+      Management for Modern Applications and Services
+    digest: 0866bc2d91b6cc9ea4af576ffb205606201b466435c315f6b420bb63e2bdc92e
+    home: https://www.keycloak.org/
+    icon: https://www.keycloak.org/resources/images/keycloak_logo_200px.svg
+    keywords:
+    - sso
+    - idm
+    - openid connect
+    - saml
+    - kerberos
+    - oauth
+    - ldap
+    - keycloak
+    - quarkus
+    maintainers:
+    - name: pqsar
+    - name: pqsdev
+    name: keycloak
+    sources:
+    - https://github.com/pqsdev/helm-charts
+    - https://github.com/keycloak/keycloak/tree/main/quarkus/container
+    urls:
+    - https://github.com/pqsdev/helm-charts/releases/download/keycloak-3.0.1/keycloak-3.0.1.tgz
+    version: 3.0.1
+  - apiVersion: v2
+    appVersion: 22.0.0
     created: "2023-07-19T15:34:29.266546659Z"
     description: Keycloak (Quarqus distribution) - Open Source Identity and Access
       Management for Modern Applications and Services
@@ -163,4 +191,4 @@ entries:
     urls:
     - https://github.com/pqsdev/helm-charts/releases/download/rabbit-chart-0.1.1/rabbit-chart-0.1.1.tgz
     version: 0.1.1
-generated: "2023-07-19T15:34:29.266572259Z"
+generated: "2023-07-19T16:22:34.883945674Z"
