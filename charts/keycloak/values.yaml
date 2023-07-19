@@ -296,9 +296,9 @@ ingress:
           pathType: Prefix
   # TLS configuration
   tls:
-    hosts:
-      - 'keycloak.localdev.me'
-    secretName: 'keycloak.localdev.me-cert'
+    - hosts:
+        - 'keycloak.localdev.me'
+      secretName: 'keycloak.localdev.me-cert'
 
   # ingress for console only (/auth/admin)
   console:
@@ -318,7 +318,7 @@ ingress:
             pathType: Prefix
 
     # Console TLS configuration
-    tls: {}
+    tls: []
 #      - hosts:
 #          - console.keycloak.example.com
 #        secretName: ""
